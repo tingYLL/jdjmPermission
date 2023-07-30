@@ -44,4 +44,15 @@ public class SysRoleController {
         IPage<SysRole> iPage = sysRoleService.selectPage(sysRolePage,sysRoleQueryVo);
         return Result.ok(iPage);
     }
+
+
+    @ApiOperation("添加角色")
+    @PostMapping("/saveRole")
+    public Result<?> saveRole(@RequestBody SysRole sysRole){
+        boolean res = sysRoleService.save(sysRole);
+        if(res){
+            return Result.ok();
+        }
+        return Result.fail();
+    }
 }
