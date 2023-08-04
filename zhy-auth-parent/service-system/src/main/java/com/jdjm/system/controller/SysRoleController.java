@@ -35,6 +35,8 @@ public class SysRoleController {
         return Result.ok(role);
     }
 
+
+    @ApiOperation("根据id进行删除")
     @DeleteMapping("/remove/{id}")
     public boolean removeRole(@PathVariable Long id){
         boolean res = sysRoleService.removeById(id);
