@@ -28,6 +28,13 @@ public class SysRoleController {
         return Result.ok(roleList);
     }
 
+    @ApiOperation("根据id查询角色")
+    @GetMapping("queryById/{id}")
+    public Result<SysRole> queryRoleById(@PathVariable Long id){
+        SysRole role = sysRoleService.getById(id);
+        return Result.ok(role);
+    }
+
     @DeleteMapping("/remove/{id}")
     public boolean removeRole(@PathVariable Long id){
         boolean res = sysRoleService.removeById(id);
@@ -54,5 +61,14 @@ public class SysRoleController {
             return Result.ok();
         }
         return Result.fail();
+    }
+
+    @ApiOperation("更新角色接口")
+    @PostMapping("/updateById")
+    public Result<?> updateRole(@RequestBody SysRole sysRole){
+        //根据id更新角色，前端传进来的sysRole一定包含id
+        boolean res = sysRoleService.updateById(sysRole);
+        if(res) return Result.ok();
+        else return Result.fail();
     }
 }
