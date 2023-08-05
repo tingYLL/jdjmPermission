@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysRole;
 import com.jdjm.model.vo.SysRoleQueryVo;
+import com.jdjm.system.exception.JdjmException;
 import com.jdjm.system.service.SysRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,11 @@ public class SysRoleController {
     @ApiOperation(value = "获取全部角色列表")
     @GetMapping("/findAll")
     public Result<List<SysRole>> findAll() {
+//        try {
+//            int a = 9/0;
+//        } catch (Exception e) {
+//            throw new JdjmException(20001,"这是自定义异常");
+//        }
         List<SysRole> roleList = sysRoleService.list();
         return Result.ok(roleList);
     }
@@ -41,6 +47,17 @@ public class SysRoleController {
     public boolean removeRole(@PathVariable Long id){
         boolean res = sysRoleService.removeById(id);
         return res;
+    }
+
+    @ApiOperation("批量删除")
+    @DeleteMapping("/removeBatch")
+    public Result<?> removeBatchByIds(@RequestBody List<Long> ids){
+        boolean res = sysRoleService.removeByIds(ids);
+        if(res){
+            return Result.ok();
+        }else{
+            return Result.fail();
+        }
     }
 
 
@@ -65,7 +82,7 @@ public class SysRoleController {
         return Result.fail();
     }
 
-    @ApiOperation("更新角色接口")
+    @ApiOperation("更新角色")
     @PostMapping("/updateById")
     public Result<?> updateRole(@RequestBody SysRole sysRole){
         //根据id更新角色，前端传进来的sysRole一定包含id
@@ -73,4 +90,6 @@ public class SysRoleController {
         if(res) return Result.ok();
         else return Result.fail();
     }
+
+
 }
