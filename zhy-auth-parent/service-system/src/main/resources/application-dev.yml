@@ -9,3 +9,8 @@ spring:
     url: jdbc:mysql://43.139.247.211:3306/zhy-auth?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root
+
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8

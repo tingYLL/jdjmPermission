@@ -44,9 +44,15 @@ public class SysRoleController {
 
     @ApiOperation("根据id进行删除")
     @DeleteMapping("/remove/{id}")
-    public boolean removeRole(@PathVariable Long id){
+    public Result removeRole(@PathVariable Long id){
         boolean res = sysRoleService.removeById(id);
-        return res;
+        if(res){
+            return Result.ok();
+        }else{
+            return Result.fail();
+        }
+
+        // return res;
     }
 
     @ApiOperation("批量删除")
@@ -62,9 +68,9 @@ public class SysRoleController {
 
 
     @ApiOperation("分页条件查询")
-    @GetMapping("/page")
-    public Result<IPage<SysRole>> queryPage(@RequestParam(name = "page", defaultValue="1") Integer page,
-                                            @RequestParam(name = "limit",defaultValue="") Integer limit,
+    @GetMapping("/{page}/{limit}")
+    public Result<IPage<SysRole>> queryPage(@PathVariable Integer page,
+                                            @PathVariable Integer limit,
                                             SysRoleQueryVo sysRoleQueryVo){
         Page<SysRole> sysRolePage = new Page<>(page, limit);
         IPage<SysRole> iPage = sysRoleService.selectPage(sysRolePage,sysRoleQueryVo);

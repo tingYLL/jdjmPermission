@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @Api("用户管理")
-@RequestMapping("/admin/user")
-public class UserController {
+@RequestMapping("/admin/system/user")
+public class SysUserController {
 
 //    {"code":20000,"data":{"token":"admin-token"}}
     @PostMapping("/login")
