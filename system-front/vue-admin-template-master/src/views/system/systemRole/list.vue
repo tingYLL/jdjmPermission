@@ -16,14 +16,20 @@
         </el-row>
       </el-form>
     </div>
+    <!-- 工具条 -->
+    <div class="tools-div">
+      <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button>
+      <el-button class="btn-add" size="mini" @click="batchRemove()" >批量删除</el-button>
+    </div>
     <!-- 表格 -->
     <el-table
-
+      v-loading="listLoading"
       :data="list"
       stripe
       border
-      style="width: 100%;margin-top: 10px;">
-
+      style="width: 100%;margin-top: 10px;"
+      @selection-change="handleSelectionChange">
+      <el-table-column type="selection"/>
       <el-table-column
         label="序号"
         width="70"
@@ -53,6 +59,21 @@
       layout="total, prev, pager, next, jumper"
       @current-change="fetchData"
     />
+    <el-dialog title="添加/修改" :visible.sync="dialogVisible" width="40%" >
+      <el-form ref="dataForm" :model="sysRole" label-width="150px" size="small" style="padding-right: 40px;">
+        <el-form-item label="角色名称">
+          <el-input v-model="sysRole.roleName"/>
+        </el-form-item>
+        <el-form-item label="角色编码">
+          <el-input v-model="sysRole.roleCode"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="small" icon="el-icon-refresh-right">取 消</el-button>
+        <el-button type="primary" icon="el-icon-check" @click="saveOrUpdate()" size="small">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -63,11 +84,15 @@ import api from '@/api/role'
 export default{
   data(){
     return {
+      listLoading:false,
       list:[],
       total:0,
       page:1, //当前页
       limit:3,
-      searchObj:{}
+      searchObj:{},
+      sysRole:{},
+      dialogVisible:false,
+      selectionsValue:[]
     }
   },
   created() {
@@ -95,15 +120,104 @@ export default{
         type: 'warning'
       }).then(() => {
 
+        //点击确定执行then，执行删除方法
         api.removeRole(id).then(res=>{
           this.$message({
             type: 'success',
             message: '删除成功!'
           });
+          //刷新页面
           this.fetchData()
         })
 
       })
+    },
+
+    //点击添加button 调用方法 把弹出框设为可见
+    add(){
+      this.dialogVisible = true
+      // 清空上一次新增时留下的数据
+      this.sysRole = {}
+    },
+
+
+    //弹出编辑框 根据这一行的id去数据库中查到数据 然后回显到编辑框中
+    edit(id){
+      this.dialogVisible = true
+      api.queryRoleById(id).then(res=>{
+        this.sysRole = res.data
+      })
+    },
+
+    //添加角色
+    saveRole(){
+      api.saveRole(this.sysRole).then(res=>{
+
+        //提示添加成功
+        this.$message({
+          type: 'success',
+          message: '添加成功!'
+        });
+
+        //关闭弹窗
+        this.dialogVisible = false
+
+        //刷新页面
+        this.fetchData(this.page)
+      })
+    },
+
+    //更新角色
+    updateRole(){
+      api.updateRole(this.sysRole).then(res=>{
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+        //关闭弹窗
+        this.dialogVisible = false
+
+        //刷新页面
+        this.fetchData(this.page)
+      })
+    },
+
+    saveOrUpdate(){
+      if(!this.sysRole.id){
+        this.saveRole()
+
+      }else{
+        this.updateRole()
+      }
+    },
+
+    batchRemove(){
+      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var ids = []
+        for(var i = 0;i < this.selectionsValue.length;i++){
+          ids.push(this.selectionsValue[i].id)
+        }
+        //点击确定执行then，执行删除方法
+        api.removeBatch(ids).then(res=>{
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
+
+        //刷新
+        this.fetchData(this.page)
+      })
+    },
+
+
+    handleSelectionChange(selections){
+      console.log("选择的记录内容:",selections)
+      this.selectionsValue = selections
     }
   }
 }

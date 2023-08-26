@@ -89,7 +89,7 @@ public class SysRoleController {
     }
 
     @ApiOperation("更新角色")
-    @PostMapping("/updateById")
+    @PostMapping("/updateRole")
     public Result<?> updateRole(@RequestBody SysRole sysRole){
         //根据id更新角色，前端传进来的sysRole一定包含id
         boolean res = sysRoleService.updateById(sysRole);

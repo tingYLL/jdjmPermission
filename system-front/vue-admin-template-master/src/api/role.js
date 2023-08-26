@@ -17,5 +17,39 @@ export default {
       url:`${api_name}/remove/${id}`,
       method:'delete',
     })
+  },
+
+  // 根据id查询
+  queryRoleById(id){
+    return request({
+      url:`${api_name}/queryById/${id}`,
+      method:'get'
+    })
+  },
+
+  //插入角色
+  saveRole(sysRole){
+    return request({
+      url:`${api_name}/saveRole`,
+      method:'post',
+      data:sysRole
+    })
+  },
+
+  // 更新角色
+  updateRole(sysRole){
+    return request({
+      url:`${api_name}/updateRole`,
+      method:'post',
+      data:sysRole
+    })
+  },
+
+  removeBatch(ids){
+    return request({
+      url:`${api_name}/removeBatch`,
+      method:'delete',
+      data:ids,
+    })
   }
 }
