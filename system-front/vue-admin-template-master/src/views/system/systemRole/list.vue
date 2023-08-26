@@ -192,6 +192,10 @@ export default{
     },
 
     batchRemove(){
+      if(this.selectionsValue.length === 0){
+        this.$message.warning('请选择要删除的记录！')
+        return
+      }
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
