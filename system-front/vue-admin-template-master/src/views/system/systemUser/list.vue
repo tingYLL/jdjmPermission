@@ -130,6 +130,7 @@ export  default{
   },
 
   methods:{
+
     removeDataById(id){
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -149,6 +150,64 @@ export  default{
 
       })
     },
+
+
+    saveOrUpdate(){
+      //如果有id 则进行编辑
+      if(this.sysUser.id){
+        this.update()
+      }else{
+        this.save()
+      }
+    },
+
+    add(){
+      this.dialogVisible = true
+      this.sysUser = {}
+    },
+
+    edit(id){
+      this.dialogVisible = true
+      api.queryById(id).then(res=>{
+        this.sysUser = res.data
+      })
+    },
+
+    update(){
+      console.log("点击了确定，修改方法被调用")
+      api.updateUser(this.sysUser).then(res=>{
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+        //关闭弹窗
+        this.dialogVisible = false
+
+        //刷新页面
+        this.fetchData(this.page)
+      })
+    },
+
+    save(){
+      api.addUser(this.sysUser).then(res=>{
+        this.$message({
+          type: 'success',
+          message: '添加成功!'
+        });
+      })
+      //关闭弹窗
+      this.dialogVisible = false
+
+      //刷新页面
+      this.fetchData(this.page)
+    },
+
+
+    // save(){
+    //   api.addUser(sysUser).then(res=>{
+    //     this.$message.
+    //   })
+    // }
 
     resetData(){
       this.searchObj = {},

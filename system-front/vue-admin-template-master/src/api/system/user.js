@@ -37,10 +37,10 @@ export default{
   },
 
   // 根据id进行更新
-  updateRole(sysUser){
+  updateUser(sysUser){
     return request({
-      url:`${api_name}/updateById/`,
-      methods:'post',
+      url:`${api_name}/updateById`,
+      method:'post',
       data:sysUser
     })
   }
