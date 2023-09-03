@@ -130,6 +130,26 @@ export  default{
   },
 
   methods:{
+    removeDataById(id){
+      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+
+        //点击确定执行then，执行删除方法
+        api.deleteUser(id).then(res=>{
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          //刷新页面
+          this.fetchData()
+        })
+
+      })
+    },
+
     resetData(){
       this.searchObj = {},
       this.createTimes = [],
