@@ -89,11 +89,19 @@ public class SysUserController {
 
     @PostMapping("updateById")
     @ApiOperation(value="根据id进行更新")
-    public Result updateRole(@RequestBody SysUser sysUser){
+    public Result updateById(@RequestBody SysUser sysUser){
         boolean res = sysUserService.updateById(sysUser);
         if(res) return Result.ok();
         else return Result.fail();
     }
 
-
+    @GetMapping("update/{id}/{status}")
+    @ApiOperation(value="更新用户状态接口")
+    public Result updateStauts(@PathVariable String id,@PathVariable Integer status){
+        SysUser sysUser = sysUserService.getById(id);
+        sysUser.setStatus(status);
+        boolean res = sysUserService.updateById(sysUser);
+        if(res) return Result.ok();
+        return Result.fail();
+    }
 }

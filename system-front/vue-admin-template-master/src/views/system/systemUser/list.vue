@@ -130,6 +130,9 @@ export  default{
   },
 
   methods:{
+    switchStatus(){
+
+    },
 
     removeDataById(id){
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {

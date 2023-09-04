@@ -43,6 +43,14 @@ export default{
       method:'post',
       data:sysUser
     })
+  },
+
+  updateStauts(id,status){
+    return request({
+      url:`${api_name}/update/${id}/${status}`,
+      method:'post',
+      data:sysUser
+    })
   }
 
 }
