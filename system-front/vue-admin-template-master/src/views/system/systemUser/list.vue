@@ -130,6 +130,16 @@ export  default{
   },
 
   methods:{
+    switchStatus(row){
+      // 如果当前的状态是1 改成0 如果是0改成1
+        row.status = row.status === 1?0:1
+      api.updateUserStatus(row.id,row.status).then(res=>{
+        if (res.code) {
+          this.$message.success(res.message || '操作成功')
+          this.fetchData()
+        }
+      })
+    },
 
     removeDataById(id){
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {

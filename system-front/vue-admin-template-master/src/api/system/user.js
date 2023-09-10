@@ -43,6 +43,14 @@ export default{
       method:'post',
       data:sysUser
     })
+  },
+
+  //更改用户状态
+  updateUserStatus(id,status){
+    return request({
+      url:`${api_name}/updateStatus/${id}/${status}`,
+      method:'get',
+    })
   }
 
 }

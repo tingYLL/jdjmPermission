@@ -95,5 +95,15 @@ public class SysUserController {
         else return Result.fail();
     }
 
+    @GetMapping("updateStatus/{id}/{status}")
+    @ApiOperation(value="修改用户状态")
+    public Result updateRoleStatus(@PathVariable  String id,@PathVariable Integer status){
+        SysUser sysUser = sysUserService.getById(id);
+        sysUser.setStatus(status);
+        boolean res = sysUserService.updateById(sysUser);
+        if(res) return Result.ok();
+        return Result.fail();
+    }
+
 
 }
