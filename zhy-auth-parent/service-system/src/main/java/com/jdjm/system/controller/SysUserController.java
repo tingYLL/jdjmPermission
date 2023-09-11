@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysUser;
 import com.jdjm.model.vo.SysUserQueryVo;
+import com.jdjm.system.service.SysUserRoleService;
 import com.jdjm.system.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +20,9 @@ import java.util.Map;
 @Api(tags = "用户管理")
 @RequestMapping("/admin/system/user")
 public class SysUserController {
+
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
 
     @Autowired
@@ -105,5 +109,12 @@ public class SysUserController {
         return Result.fail();
     }
 
+    //    根据用户id查询其下的所有角色id 以及所有角色
+    @GetMapping("/findRoleOfUser/{uid}")
+    @ApiOperation(value="查询用户拥有哪些角色身份以及所有角色列表")
+    public Result<Map<String,Object>> queryRoleOfUserAndAll(@PathVariable String uid){
+        Map<String, Object> map = sysUserRoleService.queryRoleOfUserAndAll(uid);
+        return Result.ok(map);
+    }
 
 }
