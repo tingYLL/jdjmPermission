@@ -51,5 +51,14 @@ export default {
       method:'delete',
       data:ids,
     })
+  },
+
+  //更用户分配角色
+  assignRoles(role){
+    return request({
+      url:`${api_name}/AssignRole`,
+      method:'post',
+      data:role
+    })
   }
 }

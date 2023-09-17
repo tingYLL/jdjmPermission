@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysRole;
+import com.jdjm.model.vo.AssginRoleVo;
 import com.jdjm.model.vo.SysRoleQueryVo;
 import com.jdjm.system.exception.JdjmException;
 import com.jdjm.system.service.SysRoleService;
@@ -97,6 +98,11 @@ public class SysRoleController {
         else return Result.fail();
     }
 
-
+//    给用户分配角色
+    @PostMapping("AssignRole")
+    public Result assignRole(@RequestBody AssginRoleVo assginRoleVo){
+        Result result = sysRoleService.assignRole(assginRoleVo);
+        return result;
+    }
 
 }

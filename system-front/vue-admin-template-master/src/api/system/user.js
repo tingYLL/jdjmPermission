@@ -51,6 +51,15 @@ export default{
       url:`${api_name}/updateStatus/${id}/${status}`,
       method:'get',
     })
+  },
+
+  // 根据用户id查询其下的所有角色id 以及所有角色
+  queryRoleOfUserAndAll(uid){
+
+    return request({
+      url:`${api_name}/findRoleOfUser/${uid}`,
+      method:'get'
+    })
   }
 
 }
