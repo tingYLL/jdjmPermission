@@ -98,7 +98,7 @@ public class SysRoleController {
         else return Result.fail();
     }
 
-//    给用户分配角色
+    @ApiOperation("给用户分配角色")
     @PostMapping("AssignRole")
     public Result assignRole(@RequestBody AssginRoleVo assginRoleVo){
         Result result = sysRoleService.assignRole(assginRoleVo);
