@@ -79,5 +79,12 @@ public class SysMenuController {
         Integer res = sysMenuService.updateStatus(id,status);
         return res>0?Result.ok("更新状态成功"):Result.fail("更新状态失败");
     }
+
+
+    //勾选当前角色的菜单
+    @GetMapping("/findMenu")
+    public Result findMenuOfRole(String roleId){
+        List<SysMenu>  list = sysMenuService.findMenuOfRole(roleId);
+    }
 }
 
