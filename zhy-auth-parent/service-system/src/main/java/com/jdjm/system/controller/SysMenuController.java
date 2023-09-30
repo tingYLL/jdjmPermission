@@ -4,10 +4,9 @@ package com.jdjm.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysMenu;
-import com.jdjm.system.mapper.SysMenuMapper;
+import com.jdjm.model.vo.AssignMenuVo;
 import com.jdjm.system.service.SysMenuService;
 import com.jdjm.system.utils.MainHelper;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -81,10 +80,17 @@ public class SysMenuController {
     }
 
 
-    //勾选当前角色的菜单
+    //根据角色id显示当前已为该角色分配的菜单
+    @ApiOperation("显示角色已分配的菜单")
     @GetMapping("/findMenu")
     public Result findMenuOfRole(String roleId){
         List<SysMenu>  list = sysMenuService.findMenuOfRole(roleId);
+        return Result.ok(list);
+    }
+
+    //为角色分配菜单
+    public Result assignMenu(@RequestBody AssignMenuVo assignMenuVo){
+        return sysMenuService.assignMenu(assignMenuVo);
     }
 }
 

@@ -4,14 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysMenu;
 import com.jdjm.model.system.SysRoleMenu;
+import com.jdjm.model.vo.AssignMenuVo;
 import com.jdjm.system.mapper.SysMenuMapper;
 import com.jdjm.system.mapper.SysRoleMenuMapper;
 import com.jdjm.system.service.SysMenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jdjm.system.service.SysRoleMenuService;
 import com.jdjm.system.utils.MainHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +33,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private SysMenuMapper sysMenuMapper;
     @Autowired
     private SysRoleMenuMapper sysRoleMenuMapper;
-
+    @Autowired
+    private SysRoleMenuService sysRoleMenuService;
     @Override
     public Result removeMenuById(String id) {
         LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper();
@@ -71,5 +75,24 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             }
         }
        return  MainHelper.buildTree(sysMenuList);
+    }
+
+    @Override
+    public Result assignMenu(AssignMenuVo assignMenuVo) {
+        //删除之前已经为该角色分配的菜单
+        LambdaQueryWrapper<SysRoleMenu> wrapper = new LambdaQueryWrapper();
+        wrapper.eq(SysRoleMenu::getRoleId, assignMenuVo.getRoleId());
+        sysRoleMenuMapper.delete(wrapper);
+
+        List<String> menuIdList = assignMenuVo.getMenuIdList();
+        List<SysRoleMenu> list = new ArrayList<>();
+        for (String s : menuIdList) {
+            SysRoleMenu sysRoleMenu = new SysRoleMenu();
+            sysRoleMenu.setRoleId(assignMenuVo.getRoleId());
+            sysRoleMenu.setMenuId(s);
+            list.add(sysRoleMenu);
+        }
+        boolean res = sysRoleMenuService.saveBatch(list);
+        return Result.ok();
     }
 }

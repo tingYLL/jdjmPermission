@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysRole;
-import com.jdjm.model.vo.AssginRoleVo;
+import com.jdjm.model.vo.AssignRoleVo;
 import com.jdjm.model.vo.SysRoleQueryVo;
 
 public interface SysRoleService extends IService<SysRole> {
     IPage<SysRole> selectPage(Page<SysRole> sysRolePage, SysRoleQueryVo sysRoleQueryVo);
 
-    Result assignRole(AssginRoleVo assginRoleVo);
+    Result assignRole(AssignRoleVo assignRoleVo);
 }
