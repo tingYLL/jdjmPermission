@@ -47,6 +47,23 @@ export default{
       url:`${api_name}/updateStatus/${id}/${status}`,
       method:'get'
     })
+  },
+
+  //根据角色id显示当前已为该角色分配的菜单
+  findMenuOfRole(id){
+    return request({
+      url:`${api_name}/findMenu/${id}`,
+      method:'get'
+    })
+  },
+
+  //为角色分配菜单
+  assignMenu(assignMenuVo){
+    return request({
+      url:`${api_name}/assignMenu`,
+      method:'post',
+      data:assignMenuVo
+    })
   }
 
 

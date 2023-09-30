@@ -82,13 +82,15 @@ public class SysMenuController {
 
     //根据角色id显示当前已为该角色分配的菜单
     @ApiOperation("显示角色已分配的菜单")
-    @GetMapping("/findMenu")
-    public Result findMenuOfRole(String roleId){
+    @GetMapping("/findMenu/{id}")
+    public Result findMenuOfRole(@PathVariable("id") String roleId){
         List<SysMenu>  list = sysMenuService.findMenuOfRole(roleId);
         return Result.ok(list);
     }
 
     //为角色分配菜单
+    @ApiOperation("为角色分配菜单")
+    @PostMapping("/assignMenu")
     public Result assignMenu(@RequestBody AssignMenuVo assignMenuVo){
         return sysMenuService.assignMenu(assignMenuVo);
     }

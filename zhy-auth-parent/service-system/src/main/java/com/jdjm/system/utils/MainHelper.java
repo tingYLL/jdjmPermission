@@ -20,7 +20,7 @@ public class MainHelper {
                 trees.add(findChildren(sysMenu,list));
             }
         }
-        return list;
+        return trees;
     }
 
     public static SysMenu findChildren(SysMenu sysMenu,List<SysMenu> sysMenuList){
