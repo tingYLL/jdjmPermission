@@ -14,8 +14,8 @@
         distinct <include refid="columns" />
         from sys_menu m inner join sys_role_menu rm
         on m.id = rm.menu_id
-        inner join sys_user_role ur.role_id ur
-        on ur.role_id = role_id = rm.role_id
+        inner join sys_user_role  ur
+        on ur.role_id  = rm.role_id
         where
           ur.user_id = #{id}
           and m.status = 1

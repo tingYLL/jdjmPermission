@@ -36,7 +36,7 @@ public class SysUserController {
     //返回token
 //    {"code":20000,"data":{"token":"admin-token"}}
     @PostMapping("/login")
-    public Result userLogin(LoginVo loginVo){
+    public Result userLogin(@RequestBody LoginVo loginVo){
         //判断该用户是否注册过
         SysUser user = sysUserService.queryUser(loginVo.getUsername());
         if(user == null){
