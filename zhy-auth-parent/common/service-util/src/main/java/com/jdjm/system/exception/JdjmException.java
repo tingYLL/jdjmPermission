@@ -15,4 +15,5 @@ import lombok.NoArgsConstructor;
 public class JdjmException extends RuntimeException{
     private Integer code;
     private String message;
+
 }

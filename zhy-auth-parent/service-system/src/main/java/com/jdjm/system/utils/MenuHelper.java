@@ -1,14 +1,11 @@
 package com.jdjm.system.utils;
 
 import com.jdjm.model.system.SysMenu;
-import com.jdjm.system.service.SysMenuService;
-import net.sf.jsqlparser.expression.LongValue;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainHelper {
+public class MenuHelper {
 
 
     public static List<SysMenu>  buildTree(List<SysMenu> list){

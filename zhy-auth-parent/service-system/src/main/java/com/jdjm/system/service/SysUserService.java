@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jdjm.model.system.SysUser;
 import com.jdjm.model.vo.SysUserQueryVo;
 
+import java.util.Map;
+
 /**
  * <p>
  * 用户表 服务类
@@ -18,4 +20,8 @@ import com.jdjm.model.vo.SysUserQueryVo;
 public interface SysUserService extends IService<SysUser> {
 
     IPage<SysUser> selectPage(Page<SysUser> myPage, SysUserQueryVo sysUserQueryVo);
+
+    SysUser queryUser(String username);
+
+    Map<String, Object> queryUserInfo(String username);
 }

@@ -4,6 +4,7 @@ import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jdjm.model.vo.AssignMenuVo;
+import com.jdjm.model.vo.RouterVo;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> findMenuOfRole(String roleId);
 
     Result assignMenu(AssignMenuVo assignMenuVo);
+
+    List<RouterVo> getUserMenuList(String id);
+
+    List<String> getButtonList(String id);
 }

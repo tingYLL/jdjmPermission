@@ -5,12 +5,14 @@ import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysMenu;
 import com.jdjm.model.system.SysRoleMenu;
 import com.jdjm.model.vo.AssignMenuVo;
+import com.jdjm.model.vo.RouterVo;
 import com.jdjm.system.mapper.SysMenuMapper;
 import com.jdjm.system.mapper.SysRoleMenuMapper;
 import com.jdjm.system.service.SysMenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdjm.system.service.SysRoleMenuService;
-import com.jdjm.system.utils.MainHelper;
+import com.jdjm.system.utils.MenuHelper;
+import com.jdjm.system.utils.RouterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +32,6 @@ import java.util.stream.Collectors;
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
     @Autowired
-    private SysMenuMapper sysMenuMapper;
-    @Autowired
     private SysRoleMenuMapper sysRoleMenuMapper;
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
@@ -39,27 +39,27 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public Result removeMenuById(String id) {
         LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper();
         wrapper.eq(SysMenu::getParentId,id);
-        Integer count = sysMenuMapper.selectCount(wrapper);
+        Integer count = baseMapper.selectCount(wrapper);
         if(count > 0){
             return Result.fail("请先删除子菜单");
         }
 
-        sysMenuMapper.deleteById(id);
+        baseMapper.deleteById(id);
         return Result.ok("删除成功");
     }
 
     @Override
     public Integer updateStatus(String id, Integer status) {
-        SysMenu sysMenu = sysMenuMapper.selectById(id);
+        SysMenu sysMenu = baseMapper.selectById(id);
         sysMenu.setStatus(status);
-        return sysMenuMapper.updateById(sysMenu);
+        return baseMapper.updateById(sysMenu);
     }
 
     @Override
     public List<SysMenu> findMenuOfRole(String roleId) {
         LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper();
         wrapper.eq(SysMenu::getStatus,1);
-        List<SysMenu> sysMenuList = sysMenuMapper.selectList(wrapper);
+        List<SysMenu> sysMenuList = baseMapper.selectList(wrapper);
 
         //获得当前角色下的所有菜单id
         LambdaQueryWrapper<SysRoleMenu> wrapper1 = new LambdaQueryWrapper();
@@ -74,7 +74,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                 sysMenu.setSelect(false);
             }
         }
-       return  MainHelper.buildTree(sysMenuList);
+       return  MenuHelper.buildTree(sysMenuList);
     }
 
     @Override
@@ -94,5 +94,36 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         }
         boolean res = sysRoleMenuService.saveBatch(list);
         return Result.ok();
+    }
+
+    @Override
+    public List<RouterVo> getUserMenuList(String id) {
+        List<SysMenu> sysMenuList = null;
+        //如果是超级管理员 直接查询全部
+        if("1".equals(id)){
+            LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper();
+            wrapper.eq(SysMenu::getStatus,1).orderByDesc(SysMenu::getSortValue);
+            sysMenuList = baseMapper.selectList(wrapper);
+        }else{
+            sysMenuList = baseMapper.getUserMenuList(id);
+        }
+        List<SysMenu> sysMenuList1 = MenuHelper.buildTree(sysMenuList);
+        return RouterHelper.buildRouters(sysMenuList1);
+    }
+
+    @Override
+    public List<String> getButtonList(String id) {
+        List<SysMenu> sysMenuList = null;
+        //如果是超级管理员 直接查询全部
+        if("1".equals(id)){
+            LambdaQueryWrapper<SysMenu> wrapper = new LambdaQueryWrapper();
+            wrapper.eq(SysMenu::getStatus,1).orderByDesc(SysMenu::getSortValue);
+            sysMenuList = baseMapper.selectList(wrapper);
+        }else{
+            sysMenuList = baseMapper.getUserMenuList(id);
+        }
+
+        List<String> collect = sysMenuList.stream().filter(x -> x.getType() == 2).map(x -> x.getPerms()).collect(Collectors.toList());
+        return collect;
     }
 }

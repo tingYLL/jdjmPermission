@@ -4,8 +4,12 @@ package com.jdjm.system.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jdjm.common.result.Result;
+import com.jdjm.common.utils.JwtHelper;
+import com.jdjm.common.utils.MD5;
 import com.jdjm.model.system.SysUser;
+import com.jdjm.model.vo.LoginVo;
 import com.jdjm.model.vo.SysUserQueryVo;
+import com.jdjm.system.exception.JdjmException;
 import com.jdjm.system.service.SysUserRoleService;
 import com.jdjm.system.service.SysUserService;
 import io.swagger.annotations.Api;
@@ -13,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,31 +36,37 @@ public class SysUserController {
     //返回token
 //    {"code":20000,"data":{"token":"admin-token"}}
     @PostMapping("/login")
-    public Result userLogin(){
+    public Result userLogin(LoginVo loginVo){
+        //判断该用户是否注册过
+        SysUser user = sysUserService.queryUser(loginVo.getUsername());
+        if(user == null){
+            throw new JdjmException(20001,"不存在该用户");
+        }
+
+        //判断密码是否正确
+        String encrypt = MD5.encrypt(loginVo.getPassword());
+        if(!encrypt.equals(user.getPassword())){
+            throw new JdjmException(20001,"密码不正确");
+        }
+
+        //判断用户的状态是否被禁用
+        if(user.getStatus() == 0){
+            throw new JdjmException(20001,"用户已被禁用");
+        }
+
+       //登录成功 分发token 返回token
+        String token = JwtHelper.createToken(user.getId(), user.getUsername());
         Map<String,Object> map = new HashMap();
-        map.put("token","admin-tokenzhy");
+        map.put("token",token);
         return Result.ok(map);
     }
 
-//    {
-//        "code": 20000,
-//            "data": {
-//        "roles": [
-//        "admin"
-//    ],
-//        "introduction": "I am a super administrator",
-//                "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-//                "name": "Super Admin"
-//    }
-//    }
+
     @GetMapping("/info")
-    public Result userInfo(){
-        String [] arr = {"admin"};
-        Map<String,Object> map = new HashMap<>();
-        map.put("roles",arr);
-        map.put("introduction","I am a super administrator zhy");
-        map.put("avatar","https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-        map.put("name","Super Admin");
+    public Result userInfo(HttpServletRequest request){
+        String token = request.getHeader("token");
+        String username = JwtHelper.getUsername(token);
+        Map<String,Object> map = sysUserService.queryUserInfo(username);
         return Result.ok(map);
     }
 
@@ -71,6 +82,8 @@ public class SysUserController {
     @PostMapping("add")
     @ApiOperation(value="添加用户")
     public Result<SysUser> addUser(@RequestBody SysUser sysUser){
+        String encrypt = MD5.encrypt(sysUser.getPassword());
+        sysUser.setPassword(encrypt);
         boolean res = sysUserService.save(sysUser);
         if(res) return Result.ok();
         else return Result.fail();

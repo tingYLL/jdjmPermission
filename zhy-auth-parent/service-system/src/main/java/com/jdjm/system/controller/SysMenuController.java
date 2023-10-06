@@ -6,7 +6,7 @@ import com.jdjm.common.result.Result;
 import com.jdjm.model.system.SysMenu;
 import com.jdjm.model.vo.AssignMenuVo;
 import com.jdjm.system.service.SysMenuService;
-import com.jdjm.system.utils.MainHelper;
+import com.jdjm.system.utils.MenuHelper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ public class SysMenuController {
     @GetMapping("/treeListMenu")
     public Result treeList(){
         List<SysMenu> list = sysMenuService.list();
-        List<SysMenu> result = MainHelper.buildTree(list);
+        List<SysMenu> result = MenuHelper.buildTree(list);
         return Result.ok(result);
     }
 
