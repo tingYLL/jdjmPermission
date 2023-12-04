@@ -2,6 +2,7 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
+// getDefaultState 是一个函数，返回一个包含默认状态的对象。
 const getDefaultState = () => {
   return {
     token: getToken(),
